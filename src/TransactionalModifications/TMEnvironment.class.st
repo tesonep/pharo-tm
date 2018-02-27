@@ -23,7 +23,6 @@ TMEnvironment >> associationAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 TMEnvironment >> at: aName ifAbsent: aBlock [
-
 	^ classes at: aName ifAbsent: aBlock
 ]
 
@@ -35,6 +34,12 @@ TMEnvironment >> at: aName put: anObject [
 	self assert: 'We should not be here'.
 	
 
+]
+
+{ #category : #bindings }
+TMEnvironment >> bindingOf: aString [
+	
+	^ (self classNamed: aString) ifNotNil: #binding
 ]
 
 { #category : #classes }
@@ -77,6 +82,11 @@ TMEnvironment >> description [
 	
 
 	^ self asString
+]
+
+{ #category : #bindings }
+TMEnvironment >> hasBindingThatBeginsWith: aString [ 
+	^ (classes keys anySatisfy: [ :x | x beginsWith: aString ]) or: [ parent hasBindingThatBeginsWith: aString  ]
 ]
 
 { #category : #classes }

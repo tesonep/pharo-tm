@@ -4,6 +4,12 @@ Class {
 	#category : #'TransactionalModifications-Calypso'
 }
 
+{ #category : #testing }
+TMSystemEnvironmentPlugin class >> isRelatedTo: aSystemEnvironment [ 
+	
+	^ aSystemEnvironment isKindOf: TMSystemEnvironment 
+]
+
 { #category : #packages }
 TMSystemEnvironmentPlugin >> checkPackageHasClassGroups: aPackage [
 
@@ -55,6 +61,11 @@ TMSystemEnvironmentPlugin >> decorateBrowserItem: anItem ofClass: aClass [
 	anItem ensureSystemDefinition: [ ClyClassDefinitionProperty of: aClass ].
 	aClass localSelectors ifNotEmpty: [ anItem markWithChildrenOf: ClyMethod ].
 	aClass hasComment ifFalse: [ anItem markWith: ClyNotCommentedClassTag ]
+]
+
+{ #category : #decorating }
+TMSystemEnvironmentPlugin >> decorateBrowserItem: aClyBrowserItem ofMethod: aMethod [ 
+
 ]
 
 { #category : #methods }

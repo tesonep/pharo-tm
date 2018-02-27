@@ -36,6 +36,7 @@ TMCreateClassesTest >> testRedefiningClass [
 	self assert: newClass superclass equals: Object.
 	self deny: newClass equals: TMTSimpleClass.
 	self assert: newClass slots size equals: 3.	
+	self assert: TMTSimpleClass slots size equals: 0.	
 	
 	self assert: newClass basicCategory equals: #AllClasses.
 	self assert: newClass category equals: #AllClasses.
