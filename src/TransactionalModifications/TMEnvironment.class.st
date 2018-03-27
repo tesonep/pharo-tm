@@ -23,6 +23,7 @@ TMEnvironment >> associationAt: aName ifAbsent: aBlock [
 
 { #category : #accessing }
 TMEnvironment >> at: aName ifAbsent: aBlock [
+
 	^ classes at: aName ifAbsent: aBlock
 ]
 
@@ -36,12 +37,6 @@ TMEnvironment >> at: aName put: anObject [
 
 ]
 
-{ #category : #bindings }
-TMEnvironment >> bindingOf: aString [
-	
-	^ (self classNamed: aString) ifNotNil: #binding
-]
-
 { #category : #classes }
 TMEnvironment >> categorizeClass: aClass [
  
@@ -53,6 +48,12 @@ TMEnvironment >> categorizeClass: aClass [
 TMEnvironment >> classNamed: aName [
  
 	^ classes at: aName ifAbsent: [ parent classNamed: aName ]
+]
+
+{ #category : #compiling }
+TMEnvironment >> compile: sourceCode inClassNamed: aClassName [ 
+
+	^ (self classNamed: aClassName) compile: sourceCode. 
 ]
 
 { #category : #'classes - slots' }
@@ -82,11 +83,6 @@ TMEnvironment >> description [
 	
 
 	^ self asString
-]
-
-{ #category : #bindings }
-TMEnvironment >> hasBindingThatBeginsWith: aString [ 
-	^ (classes keys anySatisfy: [ :x | x beginsWith: aString ]) or: [ parent hasBindingThatBeginsWith: aString  ]
 ]
 
 { #category : #classes }

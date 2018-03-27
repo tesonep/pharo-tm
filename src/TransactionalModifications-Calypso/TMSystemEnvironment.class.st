@@ -3,8 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'navigationEnvironment',
-		'tmEnvironment',
-		'subscribers'
+		'tmEnvironment'
 	],
 	#category : #'TransactionalModifications-Calypso'
 }
@@ -28,30 +27,15 @@ TMSystemEnvironment >> asGlobalScopeIn: aNavigationEnvironment [
 
 { #category : #compiling }
 TMSystemEnvironment >> compileANewClassFrom: aDefinition notifying: notifier startingFrom: aSelectedClass [ 
-
-	| def oldClassDef newClass |
-
-	self halt.
-	def := (CDClassParser parse: aDefinition).
-
-	oldClassDef := (tmEnvironment classNamed: def className) ifNotNil: #definition.
-	newClass := tmEnvironment defineClass: def.
-
-	self notifyClassModificationFrom: oldClassDef to: newClass.
 	
-	^ newClass
+	^ tmEnvironment defineClass: (CDClassParser parse: aDefinition).
+
 ]
 
 { #category : #accessing }
 TMSystemEnvironment >> description [
 	
 	^ tmEnvironment description
-]
-
-{ #category : #initialization }
-TMSystemEnvironment >> initialize [
-	super initialize.
-	subscribers := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -62,16 +46,6 @@ TMSystemEnvironment >> navigationEnvironment [
 { #category : #accessing }
 TMSystemEnvironment >> navigationEnvironment: aNavigationEnvironment [ 
 	navigationEnvironment := aNavigationEnvironment
-]
-
-{ #category : #events }
-TMSystemEnvironment >> notifyClassModificationFrom: oldDefinition to: newClass [
-	| ann |
-	ann := oldDefinition
-		ifNil: [ ClassAdded class: newClass category: newClass category ]
-		ifNotNil: [ ClassModifiedClassDefinition classDefinitionChangedFrom: oldDefinition to: newClass definition ].
-
-	subscribers do: [ :e | e handleSystemChange: ann ]
 ]
 
 { #category : #'accessing environment' }
@@ -88,7 +62,7 @@ TMSystemEnvironment >> packagesDo: aBlock [
 
 { #category : #events }
 TMSystemEnvironment >> subscribe: aNavigationEnvironment [ 
-	subscribers add: aNavigationEnvironment.
+	self shouldBeImplemented.
 ]
 
 { #category : #accessing }
