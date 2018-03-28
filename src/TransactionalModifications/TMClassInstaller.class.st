@@ -13,7 +13,7 @@ TMClassInstaller >> installInEnvironment: newClass [
 { #category : #building }
 TMClassInstaller >> lookupOldClass [
 	oldClass
-		ifNil: [ oldClass := self installingEnvironment classNamed: builder name ifAbsent: [ nil ] ]
+		ifNil: [ oldClass := self installingEnvironment environment definedClassesAt: builder name ifAbsent: [ nil ] ]
 ]
 
 { #category : #notifications }

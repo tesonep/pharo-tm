@@ -21,7 +21,7 @@ TMDummyOrganization >> categoryOfElement: aString [
 
 { #category : #mocking }
 TMDummyOrganization >> listAtCategoryNamed: aCategory [
- 
+ 	
 	^ tmEnvironment allClasses select: [ :e | e basicCategory = aCategory ] thenCollect: #name
 ]
 

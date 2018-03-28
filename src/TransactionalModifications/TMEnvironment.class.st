@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'classes',
 		'parent',
-		'singlePackage'
+		'packageOrganizer'
 	],
 	#category : #'TransactionalModifications-Core'
 }
 
-{ #category : #classes }
+{ #category : #'classes - accessing' }
 TMEnvironment >> allClasses [
 
 	^ classes values
@@ -21,13 +21,14 @@ TMEnvironment >> associationAt: aName ifAbsent: aBlock [
 	^ classes associationAt: aName ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #'classes - accessing' }
 TMEnvironment >> at: aName ifAbsent: aBlock [
-
-	^ classes at: aName ifAbsent: aBlock
+	
+	(self hasClassNamed: aName) ifFalse: [ ^ aBlock value ].
+	^ self classNamed: aName
 ]
 
-{ #category : #accessing }
+{ #category : #'classes - accessing' }
 TMEnvironment >> at: aName put: anObject [
 
 	anObject isBehavior ifTrue: [ ^ self installClass: anObject ].
@@ -37,20 +38,21 @@ TMEnvironment >> at: aName put: anObject [
 
 ]
 
-{ #category : #classes }
+{ #category : #'classes - defining' }
 TMEnvironment >> categorizeClass: aClass [
- 
-	singlePackage importClass: aClass.
+ 	
+	(self packageOrganizer packageOfClass: aClass) importClass: aClass
 
 ]
 
-{ #category : #classes }
+{ #category : #'classes - accessing' }
 TMEnvironment >> classNamed: aName [
  
+	(self hasClassNamed: aName) ifFalse: [ ^ nil ].
 	^ classes at: aName ifAbsent: [ parent classNamed: aName ]
 ]
 
-{ #category : #compiling }
+{ #category : #'classes - compiling' }
 TMEnvironment >> compile: sourceCode inClassNamed: aClassName [ 
 
 	^ (self classNamed: aClassName) compile: sourceCode. 
@@ -64,7 +66,7 @@ TMEnvironment >> createSlots: slotDefinitions [
 	].
 ]
 
-{ #category : #classes }
+{ #category : #'classes - defining' }
 TMEnvironment >> defineClass: aDefinition [
 
 	^ TMClassInstaller
@@ -78,6 +80,11 @@ TMEnvironment >> defineClass: aDefinition [
 				category: aDefinition packageName ]
 ]
 
+{ #category : #'classes - accessing' }
+TMEnvironment >> definedClassesAt: aName ifAbsent: aBlock [
+	^ classes at: aName ifAbsent: aBlock
+]
+
 { #category : #accessing }
 TMEnvironment >> description [
 	
@@ -85,10 +92,34 @@ TMEnvironment >> description [
 	^ self asString
 ]
 
-{ #category : #classes }
+{ #category : #packages }
+TMEnvironment >> ensurePackageNamed: aName [
+	^ packageOrganizer
+		packageNamed: aName
+		ifAbsent: [ packageOrganizer createPackageNamed: aName ]
+]
+
+{ #category : #'classes - accessing' }
 TMEnvironment >> hasClassNamed: aName [ 
 
 	^ (classes includesKey: aName) or: [ parent hasClassNamed: aName ]
+]
+
+{ #category : #'classes - defining' }
+TMEnvironment >> importClass: aClass [
+	| definition |
+	definition := (CDClassParser parse: aClass definition).
+	self ensurePackageNamed: definition packageName.
+	^ self defineClass: definition
+]
+
+{ #category : #packages }
+TMEnvironment >> importPackage: aName [ 
+
+	| originalPackage |
+	originalPackage := parent packageOrganizer packageNamed: aName.
+	
+	originalPackage classes do: [ :each | self importClass: each ]
 ]
 
 { #category : #initialization }
@@ -98,27 +129,30 @@ TMEnvironment >> initialize [
 	classes := Dictionary new.
 	parent := TMImageEnvironment new.
 
-	singlePackage := TMDummyPackage new
-		tmEnvironment: self;
-		name: 'AllClasses';
-		yourself
+	packageOrganizer := TMPackageOrganizer for: self.
+
 ]
 
-{ #category : #classes }
+{ #category : #'classes - defining' }
 TMEnvironment >> installClass: aClass [
  
 	classes at: aClass name put: aClass.
 
 ]
 
-{ #category : #mocking }
+{ #category : #accessing }
 TMEnvironment >> organization [
 	
 	^ TMDummyOrganization for: self
 ]
 
-{ #category : #accessing }
+{ #category : #packages }
+TMEnvironment >> packageOrganizer [
+	^ packageOrganizer
+]
+
+{ #category : #packages }
 TMEnvironment >> packages [
 	
-	^ { singlePackage }
+	^ packageOrganizer packages
 ]

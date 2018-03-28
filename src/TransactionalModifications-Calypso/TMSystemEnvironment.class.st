@@ -32,6 +32,11 @@ TMSystemEnvironment >> compileANewClassFrom: aDefinition notifying: notifier sta
 
 ]
 
+{ #category : #packages }
+TMSystemEnvironment >> createPackageNamed: aName [ 
+	tmEnvironment packageOrganizer createPackageNamed: aName
+]
+
 { #category : #accessing }
 TMSystemEnvironment >> description [
 	

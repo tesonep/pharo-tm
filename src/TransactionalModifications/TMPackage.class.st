@@ -1,19 +1,20 @@
 Class {
-	#name : #TMDummyPackage,
+	#name : #TMPackage,
 	#superclass : #RPackage,
 	#instVars : [
-		'tmEnvironment'
+		'tmEnvironment',
+		'organizer'
 	],
-	#category : #'TransactionalModifications-Core'
+	#category : #'TransactionalModifications-Packages'
 }
 
 { #category : #'protected only for tests' }
-TMDummyPackage class >> organizer [
+TMPackage class >> organizer [
 	self halt
 ]
 
 { #category : #'class tags' }
-TMDummyPackage >> addClassTag: aSymbol [
+TMPackage >> addClassTag: aSymbol [
 	"Add the class tag from the receiver, if already added do nothing."
 
 	| tagName newTag |
@@ -26,27 +27,32 @@ TMDummyPackage >> addClassTag: aSymbol [
 ]
 
 { #category : #accessing }
-TMDummyPackage >> classes [
+TMPackage >> classes [
 	^ super classes
 
 ]
 
 { #category : #accessing }
-TMDummyPackage >> definedClasses [
+TMPackage >> definedClasses [
 	^ classes collect: [ :aName |  tmEnvironment classNamed: aName ]
 ]
 
 { #category : #accessing }
-TMDummyPackage >> organizer [
-	self halt.
+TMPackage >> organizer [
+	^ organizer
+]
+
+{ #category : #accessing }
+TMPackage >> organizer: anOrganizer [
+	organizer := anOrganizer 
 ]
 
 { #category : #'private-register' }
-TMDummyPackage >> registerClassName: aClassNameSymbol [
+TMPackage >> registerClassName: aClassNameSymbol [
 	"Nothing to do"
 ]
 
 { #category : #accessing }
-TMDummyPackage >> tmEnvironment: aEnvironmnet [ 
+TMPackage >> tmEnvironment: aEnvironmnet [ 
 	tmEnvironment := aEnvironmnet
 ]
