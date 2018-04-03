@@ -11,15 +11,15 @@ Class {
 { #category : #classes }
 TMImageEnvironment >> classNamed: aName [
 	
-	^ Smalltalk globals at: aName ifAbsent: [ ^ nil ].
+	"^ Smalltalk globals at: aName ifAbsent: [ ^ nil ]."
 	
-	"| realClass wrappedClass |
+	| realClass wrappedClass |
 	wrappedClasses at: aName ifPresent: [ :found | ^ found ].
 	realClass := Smalltalk globals at: aName ifAbsent: [ ^ nil ].
 	
 	wrappedClass := AvInstanceDelegationClassProxy target: realClass handler: (InmutableClassHandler for: self).
 	wrappedClasses at: aName put: wrappedClass.
-	^ wrappedClass."
+	^ wrappedClass.
 ]
 
 { #category : #classes }

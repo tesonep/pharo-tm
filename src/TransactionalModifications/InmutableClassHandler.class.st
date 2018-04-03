@@ -31,7 +31,15 @@ InmutableClassHandler >> handleClassSide: aRealClass [
 
 { #category : #handling }
 InmutableClassHandler >> handleInstanceMessage: aMessage toTarget: anObject [
-	^ aMessage sendTo: anObject
+	'handleInstanceMessage:' logCr.
+	aMessage selector logCr.
+	
+	
+	1haltIf: [ aMessage selector = #setName: ].
+	
+		
+	"^ aMessage sendTo: anObject.
+"
 ]
 
 { #category : #handling }

@@ -73,6 +73,7 @@ TMEnvironment >> defineClass: aDefinition [
 		make: [ :builder | 
 			builder
 				buildEnvironment: ShGlobalsEnvironment new;
+				metaclassClass: (self classNamed: #Metaclass);
 				environment: self;
 				name: aDefinition className;
 				superclassName: aDefinition superclassName;
